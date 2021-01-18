@@ -124,5 +124,8 @@
       }
     }
   },
-  "defaultProject": "angular-pomodoro-timer-example"
+  "defaultProject": "angular-pomodoro-timer-example",
+  "cli": {
+    "analytics": false
+  }
 }
