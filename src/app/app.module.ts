@@ -10,6 +10,9 @@ import { NavComponent } from './components/nav/nav.component';
 import { PomodoroComponent } from './components/pomodoro/pomodoro.component';
 import { TimerControlsPanelComponent } from './components/timer-controls-panel/timer-controls-panel.component';
 
+import { StoreModule } from '@ngrx/store';
+import { timerReducer, countDownReducer } from './store/reducers';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +25,8 @@ import { TimerControlsPanelComponent } from './components/timer-controls-panel/t
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot({ timer: timerReducer, countDown: countDownReducer })
   ],
   providers: [],
   bootstrap: [AppComponent]
