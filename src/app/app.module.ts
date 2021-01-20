@@ -11,7 +11,8 @@ import { PomodoroComponent } from './components/pomodoro/pomodoro.component';
 import { TimerControlsPanelComponent } from './components/timer-controls-panel/timer-controls-panel.component';
 
 import { StoreModule } from '@ngrx/store';
-import { timerReducer, countDownReducer } from './store/reducers';
+import { reducer as timerReducer } from './store/timer.reducer';
+import { reducer as countDownReducer } from './store/countDown.reducer';
 
 @NgModule({
   declarations: [

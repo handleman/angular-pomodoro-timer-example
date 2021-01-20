@@ -27,7 +27,7 @@ export const setRest = createAction(
 );
 
 export const setRestMode = createAction(
-    '[CountDown] Rest',
+    '[CountDown] RestMode',
     props<{ payload: boolean }>()
 );
 
