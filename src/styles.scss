@@ -29,7 +29,14 @@ code {
 	padding: 0.2em 0.4em;
 	border-radius: 2px;
 }
-
+.controls  {
+	> *{
+		margin-right: 1em;
+			&:last-child{
+				margin-right: 0;
+			}
+	}
+}
 @media (min-width: 400px) {
 	body {
 		font-size: 16px;
