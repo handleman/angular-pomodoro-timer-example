@@ -2,16 +2,9 @@
 	<app-pomodoro></app-pomodoro>
 	<app-timer-controls-panel >
 		
-			<app-button>Run</app-button>
-	
-
-		
-			<app-button>Pause</app-button>
-	
-
-
-			<app-button>Reset</app-button>
-	
+			<app-button (click)="handleStartTimer()" *ngIf="isTimerReadyForUse || isTimerOnPause" primary>Run</app-button>
+			<app-button (click)="handlePauseTimer()" *ngIf="isTimerInUse">Pause</app-button>
+			<app-button (click)="handleResetTimer()" *ngIf="isTimerOnPause" accent>Reset</app-button>
 
 	</app-timer-controls-panel>
 
