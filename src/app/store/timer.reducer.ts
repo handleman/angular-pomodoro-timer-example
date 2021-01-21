@@ -7,7 +7,7 @@ import * as timerActions from './timer.actions';
 const timerReducer = createReducer(
     timerDefaults,
     on(timerActions.setActive, state => ({ ...state, active: true, paused: false })),
-    on(timerActions.setOnPause, state => ({ ...state, active: false, paused: true })),
+    on(timerActions.setOnPause, state => ({ ...state, active: true, paused: true })),
     on(timerActions.reset, state => ({ ...state, active: false, paused: false }))
 );
 
