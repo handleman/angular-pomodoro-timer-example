@@ -1,6 +1,6 @@
 import { COUNTDOWN_STATE } from './enums';
 
-const INTERVAL = 25;
+const INTERVAL = 2;
 
 export const timerDefaults = {
     active: false,
@@ -12,6 +12,6 @@ export const countDownDefaults = {
     minutes: INTERVAL,
     seconds: 0,
     interval: INTERVAL,
-    rest: 5,
+    rest: 1,
     restMode: false
 };

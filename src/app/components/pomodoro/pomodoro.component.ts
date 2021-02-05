@@ -8,6 +8,7 @@ import { COUNTDOWN_STATE } from '../../store/enums';
 
 import { setSeconds, setMinutes, setRestMode, setStatus } from '../../store/countDown.actions'
 import { reset } from '../../store/timer.actions'
+import { countDownDefaults } from '../../store/defaults'
 
 // todo: rewrite to selectors
 
@@ -18,7 +19,7 @@ enum CSS_CLASSES {
   RESTING = 'resting'
 }
 const DELAY = 60;
-const TICK = 1000;
+const TICK = 100;
 let tickInterval = null;
 
 const interpolateTimerToCountdownState: (timer: Timer) => COUNTDOWN_STATE = (timer) => {
@@ -40,7 +41,7 @@ const interpolateTimerToCountdownState: (timer: Timer) => COUNTDOWN_STATE = (tim
 export class PomodoroComponent implements OnInit {
   timer$: Observable<Timer>;
   countDown$: Observable<CountDown>;
-  countDown: null | CountDown;
+  countDown: CountDown = countDownDefaults;
 
 
   constructor(private store: Store<{ timer: Timer, countDown: CountDown }>) {
@@ -146,7 +147,8 @@ export class PomodoroComponent implements OnInit {
         break;
     }
 
-    return result;
+
+    return this.countDown.restMode && result !== CSS_CLASSES.PAUSED ? CSS_CLASSES.RESTING : result;
   }
 
 }
