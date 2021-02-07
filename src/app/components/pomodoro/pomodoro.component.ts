@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { CountDown, Timer } from '../../store/types';
 import { COUNTDOWN_STATE } from '../../store/enums';
@@ -19,8 +19,10 @@ enum CSS_CLASSES {
   RESTING = 'resting'
 }
 const DELAY = 60;
-const TICK = 100;
+const TICK = 1000;
 let tickInterval = null;
+
+let initialized = false;
 
 const interpolateTimerToCountdownState: (timer: Timer) => COUNTDOWN_STATE = (timer) => {
   if (timer.active && !timer.paused) {
@@ -38,33 +40,34 @@ const interpolateTimerToCountdownState: (timer: Timer) => COUNTDOWN_STATE = (tim
   templateUrl: './pomodoro.component.html',
   styleUrls: ['./pomodoro.component.scss']
 })
-export class PomodoroComponent implements OnInit {
+export class PomodoroComponent implements OnInit, OnDestroy {
   timer$: Observable<Timer>;
   countDown$: Observable<CountDown>;
   countDown: CountDown = countDownDefaults;
+  subs: Subscription[] = [];
 
 
   constructor(private store: Store<{ timer: Timer, countDown: CountDown }>) {
     this.timer$ = store.select('timer');
     this.countDown$ = store.select('countDown');
+
   }
 
   ngOnInit(): void {
-    this.countDown$.subscribe(data => {
 
-      if (this.countDown.interval !== data.interval || this.countDown.rest !== data.rest) {
-        this.resetCountDown();
+
+    const countDownSub = this.countDown$.subscribe(data => {
+      this.countDown = data;
+      if (!initialized) {
+        initialized = !initialized;
         this.resetTimer();
       }
-
-      this.countDown = data;
-
     })
-    this.timer$.subscribe(data => {
-      const derivedState = interpolateTimerToCountdownState(data);
-      const shouldSkip = (derivedState !== COUNTDOWN_STATE.ACTIVE && derivedState === this.countDown.status)
 
-      if (shouldSkip) return;
+
+    const timerSub = this.timer$.subscribe(data => {
+
+      const derivedState = interpolateTimerToCountdownState(data);
 
       this.store.dispatch(setStatus({ payload: derivedState }));
 
@@ -79,11 +82,18 @@ export class PomodoroComponent implements OnInit {
           this.resetCountDown();
           break;
       }
-
+      
     });
+
+    this.subs.push(countDownSub, timerSub);
+
+  }
+  ngOnDestroy(): void {
+    this.stopCountDown();
+    this.subs.forEach(sub => sub.unsubscribe());
+    initialized = false;
   }
   startCountDown(): void {
-    console.log('start timer');
     const tickCallback: () => void = () => {
       const isSecondsOut = (this.countDown.seconds === 0);
       const isIntervalOut = (this.countDown.minutes === 0 && this.countDown.seconds === 1);
@@ -102,11 +112,9 @@ export class PomodoroComponent implements OnInit {
     tickInterval = setInterval(tickCallback, TICK)
   }
   stopCountDown(): void {
-    console.log('stop timer');
     clearInterval(tickInterval);
   }
   toggleCountDown(): void {
-    console.log('toggleCountdown');
     if (!this.countDown.restMode) {
       this.store.dispatch(setMinutes({ payload: this.countDown.rest }));
       this.store.dispatch(setSeconds({ payload: 0 }));
@@ -122,7 +130,6 @@ export class PomodoroComponent implements OnInit {
 
   }
   resetCountDown(): void {
-    console.log('reset countdown');
     this.store.dispatch(setMinutes({ payload: this.countDown.interval }));
     this.store.dispatch(setSeconds({ payload: 0 }));
     this.store.dispatch(setRestMode({ payload: false }));

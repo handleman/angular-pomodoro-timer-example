@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { CountDown } from '../../store/types';
-import { setInterval, setRest } from '../../store/countDown.actions';
+import { setInterval, setRest, setMinutes } from '../../store/countDown.actions';
 
 @Component({
   selector: 'app-config',
@@ -19,12 +19,10 @@ export class ConfigComponent {
   }
 
   onIntervalChange(value): void {
-    console.log('interval: ', value);
     this.store.dispatch(setInterval({ payload: value }));
 
   }
   onRestChange(value): void {
-    console.log('rest: ', value);
     this.store.dispatch(setRest({ payload: value }));
   }
 

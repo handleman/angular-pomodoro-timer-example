@@ -36,15 +36,12 @@ export class IndexComponent implements OnInit {
   }
 
   handleStartTimer(): void {
-    console.log('timer started');
     this.store.dispatch(setActive());
   }
   handlePauseTimer(): void {
-    console.log('timer paused');
     this.store.dispatch(setOnPause());
   }
   handleResetTimer(): void {
-    console.log('timer paused');
     this.store.dispatch(reset());
   }
 
