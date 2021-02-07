@@ -1,0 +1,5 @@
+<div class="pomodoro " [ngClass]="getCssClasses( timer$ | async)">
+    <div class="clock">
+        <span >{{ (countDown$ | async)?.minutes }}</span>:<span>{{ (countDown$ | async)?.seconds }}</span>
+    </div>
+</div>
